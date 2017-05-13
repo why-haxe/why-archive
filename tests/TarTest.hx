@@ -14,7 +14,6 @@ using tink.io.Source;
 class TarTest {
 	public function new() {}
 	
-	@:include
 	public function invalid() {
 		var data:Chunk = Bytes.ofString('some random content');
 		var source:IdealSource = data;
