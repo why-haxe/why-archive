@@ -11,14 +11,3 @@ interface Tar {
 	function extract(source:IdealSource):RealStream<Entry<Error>>;
 }
 
-typedef Entry<Quality> = {
-	name:String,
-	size:Int,
-	?mode:Int,
-	?mtime:Date,
-	?uid:Int,
-	?gid:Int,
-	?uname:String,
-	?gname:String,
-	source:Source<Quality>,
-}

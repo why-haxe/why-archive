@@ -11,6 +11,16 @@ using tink.io.Source;
 class GzipTest {
 	public function new() {}
 	
+	public function invalid() {
+		var data:Chunk = Bytes.alloc(Std.random(999999));
+		var source:IdealSource = data;
+		
+		var gzip = new NodeGzip();
+		var uncompressed = gzip.uncompress(source);
+		
+		return uncompressed.all().map(function(o) return assert(!o.isSuccess()));
+	}
+	
 	public function roundtrip() {
 		var data:Chunk = Bytes.alloc(Std.random(999999));
 		var source:IdealSource = data;

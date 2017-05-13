@@ -1,6 +1,5 @@
 package archive.tar;
 
-import tink.io.Transformer;
 import tink.streams.Stream;
 import tink.streams.IdealStream;
 import tink.streams.RealStream;
@@ -47,7 +46,9 @@ class NodeTar implements Tar {
 		var trigger = Signal.trigger();
 		var out = new SignalStream(trigger);
 		
+		var count = 0; // HACK: https://github.com/mafintosh/tar-stream/issues/71
 		extract.on('entry', function(header, stream, next) {
+			count++;
 			trigger.trigger(Data({
 				name: header.name,
 				size: header.size,
@@ -63,7 +64,9 @@ class NodeTar implements Tar {
 		});
 
 		extract.on('error', function(e) trigger.trigger(Fail(tink.core.Error.withData(e.code, e.messaage, e))));
-		extract.on('finish', trigger.trigger.bind(End));
+		extract.on('finish', function() {
+			trigger.trigger(count == 0 ? Fail(new Error('Invalid TAR')) : End);
+		});
 
 		source.pipeTo(Sink.ofNodeStream('Tar extractor', extract), {end: true}).handle(function(o) switch o {
 			case AllWritten: // ok

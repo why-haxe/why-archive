@@ -14,6 +14,18 @@ using tink.io.Source;
 class TarTest {
 	public function new() {}
 	
+	@:include
+	public function invalid() {
+		var data:Chunk = Bytes.ofString('some random content');
+		var source:IdealSource = data;
+		
+		var tar = new NodeTar();
+		var unpacked = tar.extract(source);
+		
+		return unpacked.forEach(function(entry) return Resume)
+			.map(function(o) return assert(o.match(Failed(_))));
+	}
+	
 	public function roundtrip() {
 		function file(name:String, size:Int):Entry<Noise> return {
 			name: name,
