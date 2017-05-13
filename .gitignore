@@ -1,0 +1,5 @@
+bin/*
+!bin/node
+bin/node/*.js
+node_modules
+out

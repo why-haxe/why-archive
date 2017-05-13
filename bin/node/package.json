@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "tar-stream": "^1.5.4"
+  }
+}
