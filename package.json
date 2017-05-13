@@ -1,11 +1,12 @@
 {
-  "name": "tink_web",
+  "name": "archive",
   "version": "0.0.0",
   "description": "",
   "scripts": {
     "haxelib": "haxelib",
-    "travix": "haxe -lib travix --run travix.Travix",
-    "postinstall": "lix download"
+    "haxe": "haxe",
+    "travix": "neko travix.n",
+    "postinstall": "lix download && haxe -lib travix -main travix.Travix -neko travix.n"
   },
   "dependencies": {
     "haxeshim": "0.6.3",
