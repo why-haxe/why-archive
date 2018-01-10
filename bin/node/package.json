@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "tar-stream": "^1.5.4"
+    "archiver": "^2.1.0",
+    "tar-stream": "^1.5.4",
+    "unzipper": "^0.8.11"
   }
 }

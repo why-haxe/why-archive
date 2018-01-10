@@ -8,9 +8,10 @@ class RunTests {
 	static function main() {
 		
 		Runner.run(TestBatch.make([
-			new TarTest(),
-			new GzipTest(),
-			new DeflateTest(),
+			new ZipTest(),
+			// new TarTest(),
+			// new GzipTest(),
+			// new DeflateTest(),
 		])).handle(Runner.exit);
 	}
 
