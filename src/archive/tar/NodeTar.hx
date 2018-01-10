@@ -23,7 +23,7 @@ class NodeTar implements Tar {
 		var pack:Dynamic = tar.pack();
 		
 		files.forEach(function(file:Entry<Noise>) {
-			var entry = pack.entry({name: file.name, size: file.size});
+			var entry = pack.entry({name: file.name, size: file.size}); // TODO: pass file stats properly
 			return file.source.pipeTo(Sink.ofNodeStream('Tar entry: ${file.name}', entry), {end: true})
 				.map(function(o) return switch o {
 					case AllWritten: Resume;

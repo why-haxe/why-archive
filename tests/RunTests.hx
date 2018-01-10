@@ -9,9 +9,9 @@ class RunTests {
 		
 		Runner.run(TestBatch.make([
 			new ZipTest(),
-			// new TarTest(),
-			// new GzipTest(),
-			// new DeflateTest(),
+			new TarTest(),
+			new GzipTest(),
+			new DeflateTest(),
 		])).handle(Runner.exit);
 	}
 

@@ -24,7 +24,7 @@ class NodeZip implements Zip {
 		
 		files.forEach(function(file:Entry<Noise>) {
 			
-			pack.append(file.source.toNodeStream(), {name: file.name, stats: {size: file.size}});
+			pack.append(file.source.toNodeStream(), {name: file.name, stats: {size: file.size}}); // TODO: pass file stats properly
 			return Resume;
 		}).handle(function(o) switch o {
 			case Depleted: pack.finalize();
