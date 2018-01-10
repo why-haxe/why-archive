@@ -42,18 +42,16 @@ class NodeZip implements Zip {
 			
 			var count = 0; // HACK: https://github.com/mafintosh/zip-stream/issues/71
 			extract.on('entry', function(entry:Dynamic) {
-				trace(entry.type);
-				trace(entry.size);
 				trigger(Data({
 					name: entry.path,
-					size: entry.size,
-					mode: entry.mode,
-					mtime: entry.mtime,
-					uid: entry.uid,
-					gid: entry.gid,
-					uname: entry.uname,
-					gname: entry.gname,
-					source: Source.ofNodeStream('Zip entry: ${entry.path}', entry),
+					size: entry.vars.uncompressedSize,
+					mode: entry.mode, // TODO: properly propagate this value
+					mtime: entry.mtime, // TODO: properly propagate this value
+					uid: entry.uid, // TODO: properly propagate this value
+					gid: entry.gid, // TODO: properly propagate this value
+					uname: entry.uname, // TODO: properly propagate this value
+					gname: entry.gname, // TODO: properly propagate this value
+					source: Source.ofNodeStream('Zip entry: ${entry.name}', entry),
 				}));
 			});
 
