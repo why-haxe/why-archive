@@ -43,36 +43,36 @@ class NodeTar implements Tar {
 		var tar = js.Lib.require('tar-stream');
 		var extract:Dynamic = tar.extract();
 		
-		var trigger = Signal.trigger();
-		var out = new SignalStream(trigger);
-		
-		var count = 0; // HACK: https://github.com/mafintosh/tar-stream/issues/71
-		extract.on('entry', function(header, stream, next) {
-			count++;
-			trigger.trigger(Data({
-				name: header.name,
-				size: header.size,
-				mode: header.mode,
-				mtime: header.mtime,
-				uid: header.uid,
-				gid: header.gid,
-				uname: header.uname,
-				gname: header.gname,
-				source: Source.ofNodeStream('Tar entry: ${header.name}', stream),
-			}));
-			next();
-		});
+		return new SignalStream(Signal.generate(function(trigger:Yield<Entry<Error>, Error>->Void) {
+			
+			var count = 0; // HACK: https://github.com/mafintosh/tar-stream/issues/71
+			extract.on('entry', function(header, stream, next) {
+				count++;
+				trigger(Data({
+					name: header.name,
+					size: header.size,
+					mode: header.mode,
+					mtime: header.mtime,
+					uid: header.uid,
+					gid: header.gid,
+					uname: header.uname,
+					gname: header.gname,
+					source: Source.ofNodeStream('Tar entry: ${header.name}', stream),
+				}));
+				next();
+			});
 
-		extract.on('error', function(e) trigger.trigger(Fail(tink.core.Error.withData(e.code, e.messaage, e))));
-		extract.on('finish', function() {
-			trigger.trigger(count == 0 ? Fail(new Error('Invalid TAR')) : End);
-		});
+			extract.on('error', function(e) trigger(Fail(tink.core.Error.withData(e.code, e.messaage, e))));
+			extract.on('finish', function() {
+				trigger(count == 0 ? Fail(new Error('Invalid TAR')) : End);
+			});
 
-		source.pipeTo(Sink.ofNodeStream('Tar extractor', extract), {end: true}).handle(function(o) switch o {
-			case AllWritten: // ok
-			case SinkFailed(e, _): trigger.trigger(Fail(e));
-			case SinkEnded(_): trigger.trigger(Fail(new Error('Unexpected end of sink')));
-		});
-		return out;
+			source.pipeTo(Sink.ofNodeStream('Tar extractor', extract), {end: true}).handle(function(o) switch o {
+				case AllWritten: // ok
+				case SinkFailed(e, _): trigger(Fail(e));
+				case SinkEnded(_): trigger(Fail(new Error('Unexpected end of sink')));
+			});
+			
+		}));
 	}
 }
