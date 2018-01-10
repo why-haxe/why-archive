@@ -13,8 +13,8 @@ class NodeDeflate implements Deflate {
 		this.options = options;
 	
 	public function compress(source:IdealSource):RealSource
-		return Source.ofNodeStream('Gzip stream', source.toNodeStream().pipe(Zlib.createDeflate(options)));
+		return Source.ofNodeStream('Deflate stream', source.toNodeStream().pipe(Zlib.createDeflate(options)));
 		
 	public function uncompress(source:IdealSource):RealSource
-		return Source.ofNodeStream('Gunzip stream', source.toNodeStream().pipe(Zlib.createInflate(options)));
+		return Source.ofNodeStream('Inflate stream', source.toNodeStream().pipe(Zlib.createInflate(options)));
 }
