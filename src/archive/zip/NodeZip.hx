@@ -38,34 +38,34 @@ class NodeZip implements Zip {
 	public function unpack(source:IdealSource):RealStream<Entry<Error>> {
 		var extract:Dynamic = js.Lib.require('unzipper').Parse();
 		
-		return new SignalStream(Signal.generate(function(trigger:Yield<Entry<Error>, Error>->Void) {
-			
-			var count = 0; // HACK: https://github.com/mafintosh/zip-stream/issues/71
-			extract.on('entry', function(entry:Dynamic) {
-				trigger(Data({
-					name: entry.path,
-					size: entry.vars.uncompressedSize,
-					mode: entry.mode, // TODO: properly propagate this value
-					mtime: entry.mtime, // TODO: properly propagate this value
-					uid: entry.uid, // TODO: properly propagate this value
-					gid: entry.gid, // TODO: properly propagate this value
-					uname: entry.uname, // TODO: properly propagate this value
-					gname: entry.gname, // TODO: properly propagate this value
-					source: Source.ofNodeStream('Zip entry: ${entry.name}', entry),
-				}));
-			});
+		
+		var trigger = Signal.trigger();
+		var out = new SignalStream(trigger);
+		extract.on('entry', function(entry:Dynamic) {
+			trigger.trigger(Data({
+				name: entry.path,
+				size: entry.vars.uncompressedSize,
+				mode: entry.mode, // TODO: properly propagate this value
+				mtime: entry.mtime, // TODO: properly propagate this value
+				uid: entry.uid, // TODO: properly propagate this value
+				gid: entry.gid, // TODO: properly propagate this value
+				uname: entry.uname, // TODO: properly propagate this value
+				gname: entry.gname, // TODO: properly propagate this value
+				source: Source.ofNodeStream('Zip entry: ${entry.name}', entry),
+			}));
+		});
 
-			extract.on('error', function(e) trigger(Fail(tink.core.Error.withData(e.code, e.messaage, e))));
-			extract.on('finish', function() {
-				trigger(End);
-			});
+		extract.on('error', function(e) trigger.trigger(Fail(tink.core.Error.withData(e.code, e.messaage, e))));
+		extract.on('finish', function() {
+			trigger.trigger(End);
+		});
 
-			source.pipeTo(Sink.ofNodeStream('Zip extractor', extract), {end: true}).handle(function(o) switch o {
-				case AllWritten: // ok
-				case SinkFailed(e, _): trigger(Fail(e));
-				case SinkEnded(_): trigger(Fail(new Error('Unexpected end of sink')));
-			});
-			
-		}));
+		source.pipeTo(Sink.ofNodeStream('Zip extractor', extract), {end: true}).handle(function(o) switch o {
+			case AllWritten: // ok
+			case SinkFailed(e, _): trigger.trigger(Fail(e));
+			case SinkEnded(_): trigger.trigger(Fail(new Error('Unexpected end of sink')));
+		});
+		
+		return out;
 	}
 }
