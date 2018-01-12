@@ -35,7 +35,7 @@ class NodeZip implements Zip {
 		return Source.ofNodeStream('Zip package', pack);
 	}
 	
-	public function extract(source:IdealSource):RealStream<Entry<Error>> {
+	public function unpack(source:IdealSource):RealStream<Entry<Error>> {
 		var extract:Dynamic = js.Lib.require('unzipper').Parse();
 		
 		return new SignalStream(Signal.generate(function(trigger:Yield<Entry<Error>, Error>->Void) {

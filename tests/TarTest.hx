@@ -19,7 +19,7 @@ class TarTest {
 		var source:IdealSource = data;
 		
 		var tar = new NodeTar();
-		var unpacked = tar.extract(source);
+		var unpacked = tar.unpack(source);
 		
 		return unpacked.forEach(function(entry) return Resume)
 			.map(function(o) return assert(o.match(Failed(_))));
@@ -40,7 +40,7 @@ class TarTest {
 		];
 		
 		var packed = tar.pack(files.iterator()).idealize(rescue);
-		var entries = tar.extract(packed);
+		var entries = tar.unpack(packed);
 		
 		var iter = files.iterator();
 		entries.forEach(function(entry:Entry<Error>) 

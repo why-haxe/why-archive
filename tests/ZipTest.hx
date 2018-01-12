@@ -19,7 +19,7 @@ class ZipTest {
 		var source:IdealSource = data;
 		
 		var zip = new NodeZip();
-		var unpacked = zip.extract(source);
+		var unpacked = zip.unpack(source);
 		
 		return unpacked.forEach(function(entry) return Resume)
 			.map(function(o) return assert(o.match(Failed(_))));
@@ -40,7 +40,7 @@ class ZipTest {
 		];
 		
 		var packed = zip.pack(files.iterator()).idealize(rescue);
-		var entries = zip.extract(packed);
+		var entries = zip.unpack(packed);
 		
 		var iter = files.iterator();
 		entries.forEach(function(entry:Entry<Error>) 

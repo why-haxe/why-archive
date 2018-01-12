@@ -39,7 +39,7 @@ class NodeTar implements Tar {
 		return Source.ofNodeStream('Tar package', pack);
 	}
 	
-	public function extract(source:IdealSource):RealStream<Entry<Error>> {
+	public function unpack(source:IdealSource):RealStream<Entry<Error>> {
 		var tar = js.Lib.require('tar-stream');
 		var extract:Dynamic = tar.extract();
 		
