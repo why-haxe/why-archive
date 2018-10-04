@@ -12,12 +12,15 @@ using tink.CoreApi;
 @:require('asys')
 class AsysScanner implements Scanner {
 	var path:String;
+	var root:String;
 	
-	public function new(path) 
+	public function new(path, ?root) {
 		this.path = path;
+		this.root = root == null ? path.withoutDirectory() : root;
+	} 
 		
 	public function scan():RealStream<Entry<Error>>
-		return _scan(path, path.withoutDirectory())
+		return _scan(path, root)
 			.next(function(entries) {
 				return Stream.ofIterator(entries.iterator());
 			});
