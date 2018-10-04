@@ -21,27 +21,24 @@ class AsysScanner implements Scanner {
 		
 	public function scan():RealStream<Entry<Error>>
 		return _scan(path, root)
-			.next(function(entries) {
-				return Stream.ofIterator(entries.iterator());
-			});
-		
+			.next(function(entries) return Stream.ofIterator(entries.iterator()));
 	
 	function _scan(directory:String, root:String):Promise<Array<Entry<Error>>> {
 		var ret = [];
 		return directory.readDirectory()
-			.next(files -> {
+			.next(function(files) return {
 				Promise.inParallel([for(f in files) {
 					var path = Path.join([directory, f]);
 					var relativePath = Path.join([root, f]);
 					path.isDirectory()
-						.next(isDir -> {
+						.next(function(isDir) return {
 							if(isDir) {
-								_scan(path, relativePath).next(entries -> {
+								_scan(path, relativePath).next(function(entries) return {
 									ret = ret.concat(entries);
 									Noise;
 								});
 							} else {
-								path.stat().next(stat -> {
+								path.stat().next(function(stat) return {
 									ret.push({
 										name: relativePath,
 										size: stat.size,
@@ -57,6 +54,6 @@ class AsysScanner implements Scanner {
 						});
 				}]);
 			})
-			.next(_ -> ret);
+			.next(function(_) return ret);
 	}
 }
