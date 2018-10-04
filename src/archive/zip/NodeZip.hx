@@ -19,7 +19,7 @@ class NodeZip implements Zip {
 	
 	public function new() {}
 	
-	public function pack(files:IdealStream<Entry<Error>>):RealSource {
+	public function pack(files:RealStream<Entry<Error>>):RealSource {
 		var pack:Dynamic = js.Lib.require('archiver')('zip', {zlib: {level: 9}});
 		
 		files.forEach(function(file:Entry<Error>) {
@@ -27,6 +27,7 @@ class NodeZip implements Zip {
 			return Resume;
 		}).handle(function(o) switch o {
 			case Depleted: pack.finalize();
+			case Failed(e): pack.emit('error', new js.Error(e.message));
 			// case Clogged(e, _): pack.emit('error', new js.Error(e.message));
 			case Halted(_): throw 'unreachable';
 		});

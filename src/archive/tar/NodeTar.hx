@@ -18,7 +18,7 @@ class NodeTar implements Tar {
 	
 	public function new() {}
 	
-	public function pack(files:IdealStream<Entry<Error>>):RealSource {
+	public function pack(files:RealStream<Entry<Error>>):RealSource {
 		var tar = js.Lib.require('tar-stream');
 		var pack:Dynamic = tar.pack();
 		
@@ -32,6 +32,7 @@ class NodeTar implements Tar {
 				});
 		}).handle(function(o) switch o {
 			case Depleted: pack.finalize();
+			case Failed(e): pack.emit('error', new js.Error(e.message));
 			case Clogged(e, _): pack.emit('error', new js.Error(e.message));
 			case Halted(_): throw 'unreachable';
 		});
