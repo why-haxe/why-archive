@@ -26,7 +26,7 @@ class TarTest {
 	}
 	
 	public function roundtrip() {
-		function file(name:String, size:Int):Entry<Noise> return {
+		function file(name:String, size:Int):Entry<Error> return {
 			name: name,
 			size: size,
 			source: (Bytes.alloc(size):Chunk),

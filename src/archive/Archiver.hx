@@ -7,7 +7,7 @@ using tink.io.Source;
 using tink.CoreApi;
 
 interface Archiver {
-	function pack(files:IdealStream<Entry<Noise>>):RealSource;
-	function unpack(source:IdealSource):RealStream<Entry<Error>>;
+	function pack(files:IdealStream<Entry<Error>>):RealSource;
+	function unpack(source:RealSource):RealStream<Entry<Error>>;
 }
 

@@ -19,11 +19,10 @@ class NodeZip implements Zip {
 	
 	public function new() {}
 	
-	public function pack(files:IdealStream<Entry<Noise>>):RealSource {
+	public function pack(files:IdealStream<Entry<Error>>):RealSource {
 		var pack:Dynamic = js.Lib.require('archiver')('zip', {zlib: {level: 9}});
 		
-		files.forEach(function(file:Entry<Noise>) {
-			
+		files.forEach(function(file:Entry<Error>) {
 			pack.append(file.source.toNodeStream(), {name: file.name, stats: {size: file.size}}); // TODO: pass file stats properly
 			return Resume;
 		}).handle(function(o) switch o {
@@ -35,7 +34,7 @@ class NodeZip implements Zip {
 		return Source.ofNodeStream('Zip package', pack);
 	}
 	
-	public function unpack(source:IdealSource):RealStream<Entry<Error>> {
+	public function unpack(source:RealSource):RealStream<Entry<Error>> {
 		var extract:Dynamic = js.Lib.require('unzipper').Parse();
 		
 		
@@ -62,7 +61,7 @@ class NodeZip implements Zip {
 
 		source.pipeTo(Sink.ofNodeStream('Zip extractor', extract), {end: true}).handle(function(o) switch o {
 			case AllWritten: // ok
-			case SinkFailed(e, _): trigger.trigger(Fail(e));
+			case SourceFailed(e) | SinkFailed(e, _): trigger.trigger(Fail(e));
 			case SinkEnded(_): trigger.trigger(Fail(new Error('Unexpected end of sink')));
 		});
 		

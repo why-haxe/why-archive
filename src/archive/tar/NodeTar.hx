@@ -18,16 +18,16 @@ class NodeTar implements Tar {
 	
 	public function new() {}
 	
-	public function pack(files:IdealStream<Entry<Noise>>):RealSource {
+	public function pack(files:IdealStream<Entry<Error>>):RealSource {
 		var tar = js.Lib.require('tar-stream');
 		var pack:Dynamic = tar.pack();
 		
-		files.forEach(function(file:Entry<Noise>) {
+		files.forEach(function(file:Entry<Error>) {
 			var entry = pack.entry({name: file.name, size: file.size}); // TODO: pass file stats properly
 			return file.source.pipeTo(Sink.ofNodeStream('Tar entry: ${file.name}', entry), {end: true})
 				.map(function(o) return switch o {
 					case AllWritten: Resume;
-					case SinkFailed(e, _): Clog(e);
+					case SourceFailed(e) | SinkFailed(e, _): Clog(e);
 					case SinkEnded(_): Clog(new Error('Unexpected end of tar pack'));
 				});
 		}).handle(function(o) switch o {
@@ -39,7 +39,7 @@ class NodeTar implements Tar {
 		return Source.ofNodeStream('Tar package', pack);
 	}
 	
-	public function unpack(source:IdealSource):RealStream<Entry<Error>> {
+	public function unpack(source:RealSource):RealStream<Entry<Error>> {
 		var tar = js.Lib.require('tar-stream');
 		var extract:Dynamic = tar.extract();
 		
@@ -70,7 +70,7 @@ class NodeTar implements Tar {
 
 		source.pipeTo(Sink.ofNodeStream('Tar extractor', extract), {end: true}).handle(function(o) switch o {
 			case AllWritten: // ok
-			case SinkFailed(e, _): trigger.trigger(Fail(e));
+			case SourceFailed(e) | SinkFailed(e, _): trigger.trigger(Fail(e));
 			case SinkEnded(_): trigger.trigger(Fail(new Error('Unexpected end of sink')));
 		});
 		return out;

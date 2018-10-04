@@ -12,9 +12,9 @@ class NodeDeflateRaw implements Deflate {
 	public function new(?options)
 		this.options = options;
 	
-	public function compress(source:IdealSource):RealSource
+	public function compress(source:RealSource):RealSource
 		return Source.ofNodeStream('DeflateRaw stream', source.toNodeStream().pipe(Zlib.createDeflateRaw(options)));
 		
-	public function uncompress(source:IdealSource):RealSource
+	public function uncompress(source:RealSource):RealSource
 		return Source.ofNodeStream('InflateRaw stream', source.toNodeStream().pipe(Zlib.createInflateRaw(options)));
 }
