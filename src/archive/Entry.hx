@@ -4,7 +4,7 @@ using tink.io.Source;
 
 typedef Entry<Quality> = {
 	name:String,
-	size:Int,
+	?size:Int,
 	?mode:Int,
 	?mtime:Date,
 	?uid:Int,
