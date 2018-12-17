@@ -23,15 +23,14 @@ class NodeZip implements Zip {
 		var pack:Dynamic = js.Lib.require('archiver')('zip', {zlib: {level: 9}});
 		
 		files.forEach(function(file:Entry<Error>) {
-			var stream = file.source.toNodeStream();
-			pack.append(stream, {
+			pack.append(file.source.toNodeStream(), {
 				name: file.name, 
 				mode: file.mode,
 				stats: { // TODO: pass file stats properly
 					size: file.size,
 				}
 			});
-			return Future.async(function(cb) stream.on('end', cb.bind(Resume)));
+			return Resume;
 		}).handle(function(o) switch o {
 			case Depleted: pack.finalize();
 			case Failed(e): pack.emit('error', new js.Error(e.message));
