@@ -1,6 +1,6 @@
-package archive.scanner;
+package why.archive.scanner;
 
-import archive.*;
+import why.archive.*;
 import tink.streams.Stream;
 
 using tink.streams.RealStream;

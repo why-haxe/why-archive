@@ -1,4 +1,4 @@
-package archive.gzip;
+package why.archive.gzip;
 
 import js.node.Zlib;
 

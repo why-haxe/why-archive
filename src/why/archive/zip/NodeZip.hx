@@ -1,4 +1,4 @@
-package archive.zip;
+package why.archive.zip;
 
 import tink.streams.Stream;
 import tink.streams.IdealStream;
@@ -8,7 +8,7 @@ import js.node.Zlib;
 import js.node.Buffer;
 import js.node.stream.PassThrough;
 import js.node.stream.Readable;
-import archive.zip.Zip;
+import why.archive.zip.Zip;
 import js.node.fs.Stats;
 
 using tink.CoreApi;

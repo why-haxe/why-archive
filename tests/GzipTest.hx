@@ -3,7 +3,7 @@ package;
 import haxe.io.*;
 import tink.unit.Assert.*;
 import tink.Chunk;
-import archive.gzip.*;
+import why.archive.gzip.*;
 
 using tink.CoreApi;
 using tink.io.Source;

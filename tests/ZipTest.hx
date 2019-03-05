@@ -4,8 +4,8 @@ import haxe.io.*;
 import tink.unit.Assert.*;
 import tink.streams.Stream;
 import tink.Chunk;
-import archive.zip.*;
-import archive.zip.Zip;
+import why.archive.zip.*;
+import why.archive.zip.Zip;
 
 using tink.CoreApi;
 using tink.io.Source;

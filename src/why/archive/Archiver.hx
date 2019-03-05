@@ -1,4 +1,4 @@
-package archive;
+package why.archive;
 
 import tink.streams.IdealStream;
 import tink.streams.RealStream;

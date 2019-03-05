@@ -4,8 +4,8 @@ import haxe.io.*;
 import tink.unit.Assert.*;
 import tink.streams.Stream;
 import tink.Chunk;
-import archive.tar.*;
-import archive.tar.Tar;
+import why.archive.tar.*;
+import why.archive.tar.Tar;
 
 using tink.CoreApi;
 using tink.io.Source;

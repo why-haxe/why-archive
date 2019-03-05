@@ -1,4 +1,4 @@
-package archive.deflate;
+package why.archive.deflate;
 
 import js.node.Zlib;
 

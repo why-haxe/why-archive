@@ -1,4 +1,4 @@
-package archive;
+package why.archive;
 
 using tink.streams.RealStream;
 using tink.CoreApi;

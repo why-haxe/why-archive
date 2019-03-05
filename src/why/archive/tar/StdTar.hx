@@ -1,4 +1,4 @@
-// package archive.tar;
+// package why.archive.tar;
 
 // import format.tar.*;
 // import haxe.io.*;

@@ -1,4 +1,4 @@
-package archive.tar;
+package why.archive.tar;
 
 import tink.streams.Stream;
 import tink.streams.IdealStream;
@@ -8,7 +8,7 @@ import js.node.Zlib;
 import js.node.Buffer;
 import js.node.stream.PassThrough;
 import js.node.stream.Readable;
-import archive.tar.Tar;
+import why.archive.tar.Tar;
 
 using tink.CoreApi;
 using tink.io.Sink;
