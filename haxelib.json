@@ -16,7 +16,6 @@
 	"releasenote": "Initial release",
 	"version": "0.1.0",
 	"dependencies": {
-		"tink_io": "",
-		"format": ""
+		"tink_io": ""
 	}
 }
