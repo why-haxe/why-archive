@@ -9,6 +9,7 @@ import js.node.Buffer;
 import js.node.stream.PassThrough;
 import js.node.stream.Readable;
 import why.archive.tar.Tar;
+import #if haxe4 js.lib.Error #else js.Error #end as JsError;
 
 using tink.CoreApi;
 using tink.io.Sink;
@@ -26,14 +27,14 @@ class NodeTar implements Tar {
 			var entry = pack.entry({name: file.name, size: file.size}); // TODO: pass file stats properly
 			return file.source.pipeTo(Sink.ofNodeStream('Tar entry: ${file.name}', entry), {end: true})
 				.map(function(o) return switch o {
-					case AllWritten: Resume;
-					case SourceFailed(e) | SinkFailed(e, _): Clog(e);
-					case SinkEnded(_): Clog(new Error('Unexpected end of tar pack'));
+					case AllWritten: Handled.Resume;
+					case SourceFailed(e) | SinkFailed(e, _): Handled.Clog(e);
+					case SinkEnded(_): Handled.Clog(new Error('Unexpected end of tar pack'));
 				});
 		}).handle(function(o) switch o {
 			case Depleted: pack.finalize();
-			case Failed(e): pack.emit('error', new js.Error(e.message));
-			case Clogged(e, _): pack.emit('error', new js.Error(e.message));
+			case Failed(e): pack.emit('error', new JsError(e.message));
+			case Clogged(e, _): pack.emit('error', new JsError(e.message));
 			case Halted(_): throw 'unreachable';
 		});
 		

@@ -10,6 +10,7 @@ import js.node.stream.PassThrough;
 import js.node.stream.Readable;
 import why.archive.zip.Zip;
 import js.node.fs.Stats;
+import #if haxe4 js.lib.Error #else js.Error #end as JsError;
 
 using tink.CoreApi;
 using tink.io.Sink;
@@ -30,10 +31,10 @@ class NodeZip implements Zip {
 					size: file.size,
 				}
 			});
-			return Resume;
+			return Handled.Resume;
 		}).handle(function(o) switch o {
 			case Depleted: pack.finalize();
-			case Failed(e): pack.emit('error', new js.Error(e.message));
+			case Failed(e): pack.emit('error', new JsError(e.message));
 			// case Clogged(e, _): pack.emit('error', new js.Error(e.message));
 			case Halted(_): throw 'unreachable';
 		});
