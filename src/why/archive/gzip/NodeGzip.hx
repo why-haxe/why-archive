@@ -12,6 +12,8 @@ class NodeGzip implements Gzip {
 	public function new(?options)
 		this.options = options;
 	
+	public function extension() return 'gz';
+	
 	public function compress(source:RealSource):RealSource
 		return Source.ofNodeStream('Gzip stream', source.toNodeStream().pipe(Zlib.createGzip(options)));
 		

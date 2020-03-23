@@ -20,6 +20,8 @@ class NodeZip implements Zip {
 	
 	public function new() {}
 	
+	public function extension() return 'zip';
+	
 	public function pack(files:RealStream<Entry<Error>>):RealSource {
 		var pack:Dynamic = js.Lib.require('archiver')('zip', {zlib: {level: 9}});
 		

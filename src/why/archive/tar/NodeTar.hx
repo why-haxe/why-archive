@@ -19,6 +19,8 @@ class NodeTar implements Tar {
 	
 	public function new() {}
 	
+	public function extension() return 'tar';
+	
 	public function pack(files:RealStream<Entry<Error>>):RealSource {
 		var tar = js.Lib.require('tar-stream');
 		var pack:Dynamic = tar.pack();
